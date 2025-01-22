@@ -1,9 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.snekker.jetpack.mixin.client",
+  "package": "org.snekker.jetpack.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

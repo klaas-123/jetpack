@@ -11,8 +11,7 @@ public class Jetpack implements ModInitializer {
     public void onInitialize() {
         ModItems.initialize();
 
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
-                .register((itemGroup) -> itemGroup.add(ModItems.JETPACK));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((itemGroup) -> itemGroup.add(ModItems.JETPACK));
     }
 
 }

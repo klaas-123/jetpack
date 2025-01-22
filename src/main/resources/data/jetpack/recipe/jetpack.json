@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "iNi",
+    "iFi"
+  ],
+  "key": {
+    "#" : "minecraft:golden_chestplate"
+    ,
+    "i" : "minecraft:iron_ingot"
+    ,
+    "N" : "minecraft:nether_star"
+    ,
+    "F" : "minecraft:fire_charge"
+
+
+  },
+  "result":{
+    "id": "jetpack:jetpack"
+  }
+}
