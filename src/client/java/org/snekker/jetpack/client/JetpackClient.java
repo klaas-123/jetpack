@@ -31,6 +31,7 @@ public class JetpackClient implements ClientModInitializer {
             }
         });
 
+        ClientEvents.registerEvents();
 
     }
 

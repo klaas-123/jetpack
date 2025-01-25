@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.snekker.jetpack.JetpackArmorItem;
+import org.snekker.jetpack.component.ModComponents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,7 +29,7 @@ public class LivingEntityMixin {
                     abilities.flying = false;
                 }
                 if (newStack.getItem() instanceof JetpackArmorItem) {
-                    abilities.allowFlying = true;
+                    abilities.allowFlying = newStack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0) > 0;
                 }
             }
 
