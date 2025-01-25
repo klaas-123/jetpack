@@ -1,3 +1,9 @@
 {
-  "item.jetpack.jetpack": "Jetpack"
+  "item.jetpack.jetpack": "Jetpack",
+  "item.jetpack.fuel_cell": "Fuel Cell",
+  "item.jetpack.empty_fuel_cell": "Empty Fuel Cell",
+  "itemGroup.jetpacks": "Jetpacks",
+  "item.jetpack.thruster": "Thruster",
+  "item.jetpack.jet_engine": "Jet Engine",
+  "item.jetpack.propeller": "Propeller"
 }

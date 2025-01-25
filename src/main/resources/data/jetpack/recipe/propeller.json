@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i i",
+    " F ",
+    "i i"
+  ],
+  "key": {
+    "F" : "minecraft:feather"
+  ,
+    "i" : "minecraft:iron_ingot"
+
+  },
+  "result":{
+    "id": "jetpack:propeller"
+  }
+}

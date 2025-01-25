@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i i",
+    "iri",
+    " i "
+  ],
+  "key": {
+    "r" : "minecraft:redstone"
+  ,
+    "i" : "minecraft:iron_ingot"
+
+  },
+  "result":{
+    "id": "jetpack:thruster"
+  }
+}

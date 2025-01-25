@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "G G",
+    "G G",
+    "iii"
+  ],
+  "key": {
+    "G" : "minecraft:glass_block"
+  ,
+    "i" : "minecraft:iron_ingot"
+
+  },
+  "result":{
+    "id": "jetpack:empty_fuel_cell"
+  }
+}
