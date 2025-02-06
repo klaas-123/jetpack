@@ -33,6 +33,7 @@ import org.snekker.jetpack.sound.ModSounds;
 
 public class JetpackClient implements ClientModInitializer {
 
+   // private static ClientPlayerEntity player;
     private static KeyBinding keyBinding;
     //private static PlayerEntity player1;
 
@@ -46,10 +47,14 @@ public class JetpackClient implements ClientModInitializer {
                 "category.jetpack.test" // The translation key of the keybinding's category.
         ));
 
+
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
             if (client.player == null || client.world == null) {
                 return;
             }
+
             var jetpack = client.player.getEquippedStack(EquipmentSlot.CHEST);
             var fuel = jetpack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
             if (keyBinding.isPressed() && !client.player.isOnGround() && jetpack.isOf(ModItems.JETPACK) && !jetpack.isEmpty() && fuel > 0) {
@@ -65,15 +70,72 @@ public class JetpackClient implements ClientModInitializer {
                 var x = client.player.getX() - vec.getX();
                 var y = client.player.getY() + 0.5;
                 var z = client.player.getZ() - vec.getZ();
+
+                double offset = 0.1;
+
+                if (client.player.isInFluid()){
+                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z, 0, -0.08, 0);
+                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x, y, z+ offset, 0, -0.08, 0);
+                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset + offset, 0, -0.08, 0);
+                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset, 0, -0.08, 0);
+                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset + offset, y, z, 0, -0.08, 0);
                     client.player.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, 1f , 1f);
+
+                } else if (client.player.isInvisible()) {
+                    client.world.addParticle(ParticleTypes.END_ROD, x, y, z, 0, -0.02, 0);
+
+                } else {
+                    client.world.addParticle(ParticleTypes.CLOUD, x, y, z, 0, -0.1, 0);
+                    client.world.addParticle(ParticleTypes.SMOKE, x, y, z, 0, -0.06, 0);
                     client.world.playSound(client.player, x, y, z, ModSounds.JETPACK_SOUND, SoundCategory.PLAYERS);
+                }
+
                 fuel -= 1;
                 jetpack.set(ModComponents.JETPACK_FUEL_COMPONENT, fuel);
                 ClientPlayNetworking.send(new SetFuelPayload(fuel));
+
+
+
+
+
+
+
+
+
             }
+
         });
 
+        HudRenderCallback.EVENT.register((context, renderTickCounter) -> {
 
+            var client = MinecraftClient.getInstance();
+            var jetpack = client.player.getEquippedStack(EquipmentSlot.CHEST);
+            var fuel = jetpack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
+
+
+                    /*Matrix4f transformationMatrix = context.getMatrices().peek().getPositionMatrix();
+                    Tessellator tessellator = Tessellator.getInstance();
+
+                    BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+
+                    buffer.vertex(transformationMatrix, 20, 20, 5).color(0xFF414141);
+                    buffer.vertex(transformationMatrix, 5, 40, 5).color(0xFF000000);
+                    buffer.vertex(transformationMatrix, 35, 40, 5).color(0xFF000000);
+                    buffer.vertex(transformationMatrix, 20, 60, 5).color(0xFF414141);
+
+                    RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+                    BufferRenderer.drawWithGlobalProgram(buffer.end());*/
+
+            int rectangleX = 10;
+            int rectangleY = 10;
+            int rectangleWidth = 10;
+            int rectangleHeight = (fuel / 40);
+
+            context.fill(9, 9, 21, 61, 0xFF6F6F6F);
+            context.fill(rectangleX, rectangleY + 50 - rectangleHeight, rectangleX + rectangleWidth, rectangleY + 50, 0xFF0000FF);
+        });
     }
 
 }
