@@ -7,7 +7,7 @@
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "main/recources/assets/jetpack/textures/item/Jetpack-alpha01.png",
+  "icon": "main/recources/assets/jetpack/textures/item/jetpack.png",
   "environment": "*",
   "entrypoints": {
     "client": [

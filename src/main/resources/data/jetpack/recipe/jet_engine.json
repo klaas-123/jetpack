@@ -1,22 +1,22 @@
-
-"type": "minecraft:crafting_shaped",
-"pattern": [
-"r*r",
-"ifi",
-" t "
-],
-"key": {
-"t" : "jetpack:thruster"
-,
-"i" : "minecraft:iron_ingot"
-,
-"r" : "minecraft:redstone"
-,
-"*" : "jetpack:turbine"
-,
-"f" : "fire_charge"
-},
-"result":{
-"id": "jetpack:jet_engine"
-}
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r*r",
+    "ifi",
+    " t "
+  ],
+  "key": {
+    "t" : "jetpack:thruster"
+    ,
+    "i" : "minecraft:iron_ingot"
+    ,
+    "r" : "minecraft:redstone"
+    ,
+    "*" : "jetpack:propeller"
+    ,
+    "f" : "fire_charge"
+  },
+  "result":{
+    "id": "jetpack:jet_engine"
+  }
 }
