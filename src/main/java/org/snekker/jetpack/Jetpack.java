@@ -1,10 +1,16 @@
-package org.snekker.jetpack;
+/*package org.snekker.jetpack;
 
 import net.fabricmc.api.ModInitializer;
+
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.snekker.jetpack.component.ModComponents;
+import org.snekker.jetpack.network.SetFuelPayload;
 
 import static org.snekker.jetpack.ModItems.CUSTOM_ITEM_GROUP;
 import static org.snekker.jetpack.ModItems.CUSTOM_ITEM_GROUP_KEY;
@@ -30,6 +36,20 @@ public class Jetpack implements ModInitializer {
            // itemGroup.add(ModItems.JETPACK_CHESTPLATE);
             // ...
         });
+
+        PayloadTypeRegistry.playC2S().register(SetFuelPayload.ID, SetFuelPayload.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(SetFuelPayload.ID, Jetpack::handleSetFuelPayload);
+
+        ModSounds.registerSounds();
     }
 
-}
+    private static void handleSetFuelPayload(SetFuelPayload setFuelPayload, ServerPlayNetworking.Context context) {
+        context.server().execute(()-> {
+            var jetpack = context.player().getEquippedStack(EquipmentSlot.CHEST);
+            if (jetpack.isOf(ModItems.JETPACK)){
+                jetpack.set(ModComponents.JETPACK_FUEL_COMPONENT, setFuelPayload.fuel());
+            }
+        });
+    }
+
+}*/

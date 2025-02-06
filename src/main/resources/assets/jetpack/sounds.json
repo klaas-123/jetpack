@@ -1,0 +1,8 @@
+{
+  "jetpack_sound": {
+    "subtitle": "sound.jetpack.jetpack_sound",
+    "sounds": [
+      "jetpack:jetpack_sound"
+    ]
+  }
+}

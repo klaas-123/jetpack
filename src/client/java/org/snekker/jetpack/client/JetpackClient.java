@@ -28,6 +28,8 @@ public class JetpackClient implements ClientModInitializer {
             while (keyBinding.wasPressed()) {
                 client.player.sendMessage(Text.literal("Key 1 was pressed!"), false);
                 //player.getAbilities().allowFlying;
+                    client.player.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, 1f , 1f);
+                    client.world.playSound(client.player, x, y, z, ModSounds.JETPACK_SOUND, SoundCategory.PLAYERS);
             }
         });
 

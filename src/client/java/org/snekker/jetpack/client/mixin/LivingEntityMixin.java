@@ -4,8 +4,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import org.snekker.jetpack.JetpackArmorItem;
+import org.snekker.jetpack.item.JetpackItem;
 import org.snekker.jetpack.component.ModComponents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,11 +23,11 @@ public class LivingEntityMixin {
             if (slot.isArmorSlot()) {
 
                 var abilities = playerEntity.getAbilities();
-                if (oldStack.getItem() instanceof JetpackArmorItem) {
+                if (oldStack.getItem() instanceof JetpackItem) {
                     abilities.allowFlying = false;
                     abilities.flying = false;
                 }
-                if (newStack.getItem() instanceof JetpackArmorItem) {
+                if (newStack.getItem() instanceof JetpackItem) {
                     abilities.allowFlying = newStack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0) > 0;
                 }
             }
