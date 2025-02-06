@@ -1,4 +1,4 @@
-/*package org.snekker.jetpack;
+package org.snekker.jetpack;
 
 import net.fabricmc.api.ModInitializer;
 
@@ -6,17 +6,22 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 import org.snekker.jetpack.component.ModComponents;
 import org.snekker.jetpack.network.SetFuelPayload;
+import org.snekker.jetpack.sound.ModSounds;
 
 import static org.snekker.jetpack.ModItems.CUSTOM_ITEM_GROUP;
 import static org.snekker.jetpack.ModItems.CUSTOM_ITEM_GROUP_KEY;
 
 public class Jetpack implements ModInitializer {
     public static final String MOD_ID = "jetpack";
+
+    public static Identifier id(String id) {
+        return Identifier.of(MOD_ID, id);
+    }
 
     @Override
     public void onInitialize() {
@@ -52,4 +57,4 @@ public class Jetpack implements ModInitializer {
         });
     }
 
-}*/
+}
