@@ -4,9 +4,14 @@
   "package": "org.snekker.jetpack.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "LivingEntityMixin"
+    "EntityModelsMixin",
+    "ILivingEntityRendererInvoker",
+    "LivingEntityMixin",
+    "PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+  ]
 }

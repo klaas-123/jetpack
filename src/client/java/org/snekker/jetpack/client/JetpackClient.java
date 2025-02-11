@@ -68,7 +68,7 @@ public class JetpackClient implements ClientModInitializer {
 
                 var vec = client.player.getRotationVector();
                 var x = client.player.getX() - vec.getX();
-                var y = client.player.getY() + 0.5;
+                var y = client.player.getY() + 0.8;
                 var z = client.player.getZ() - vec.getZ();
 
                 double offset = 0.1;
@@ -79,7 +79,7 @@ public class JetpackClient implements ClientModInitializer {
                     client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset + offset, 0, -0.08, 0);
                     client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset, 0, -0.08, 0);
                     client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset + offset, y, z, 0, -0.08, 0);
-                    client.player.playSound(SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, 1f , 1f);
+                    client.world.playSound(client.player, x, y, z, SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, SoundCategory.PLAYERS);
 
                 } else if (client.player.isInvisible()) {
                     client.world.addParticle(ParticleTypes.END_ROD, x, y, z, 0, -0.02, 0);
@@ -104,6 +104,8 @@ public class JetpackClient implements ClientModInitializer {
 
             }
 
+
+
         });
 
         HudRenderCallback.EVENT.register((context, renderTickCounter) -> {
@@ -127,14 +129,16 @@ public class JetpackClient implements ClientModInitializer {
                     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
                     BufferRenderer.drawWithGlobalProgram(buffer.end());*/
+            if (jetpack.isOf(ModItems.JETPACK)) {
 
-            int rectangleX = 10;
-            int rectangleY = 10;
-            int rectangleWidth = 10;
-            int rectangleHeight = (fuel / 40);
+                int rectangleX = 10;
+                int rectangleY = 10;
+                int rectangleWidth = 10;
+                int rectangleHeight = (fuel / 40);
 
-            context.fill(9, 9, 21, 61, 0xFF6F6F6F);
-            context.fill(rectangleX, rectangleY + 50 - rectangleHeight, rectangleX + rectangleWidth, rectangleY + 50, 0xFF0000FF);
+                context.fill(8, 8, 22, 62, 0xFF373a3e);
+                context.fill(rectangleX, rectangleY + 50 - rectangleHeight, rectangleX + rectangleWidth, rectangleY + 50, 0xFF3cb0da);
+            }
         });
     }
 
