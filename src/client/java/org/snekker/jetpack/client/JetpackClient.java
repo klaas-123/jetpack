@@ -19,6 +19,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
@@ -30,16 +31,25 @@ import org.snekker.jetpack.component.ModComponents;
 import org.snekker.jetpack.network.SetFuelPayload;
 import org.snekker.jetpack.sound.ModSounds;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+
 
 public class JetpackClient implements ClientModInitializer {
 
    // private static ClientPlayerEntity player;
-    private static KeyBinding keyBinding;
+    //private static KeyBinding keyBinding;
     //private static PlayerEntity player1;
+
+    private boolean canFly = false;
 
     @Override
     public void onInitializeClient() {
 
+        JetpackKeys.registerKeybinds();
+/*
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.jetpack.spook", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
@@ -47,66 +57,73 @@ public class JetpackClient implements ClientModInitializer {
                 "category.jetpack.test" // The translation key of the keybinding's category.
         ));
 
+ */
+
 
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
-            if (client.player == null || client.world == null) {
+            if (client.player == null || client.world == null || client.player.isInCreativeMode() || client.player.isSpectator()) {
                 return;
             }
 
             var jetpack = client.player.getEquippedStack(EquipmentSlot.CHEST);
             var fuel = jetpack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
-            if (keyBinding.isPressed() && !client.player.isOnGround() && jetpack.isOf(ModItems.JETPACK) && !jetpack.isEmpty() && fuel > 0) {
+            if (!client.player.isOnGround()) {
 
-                Vec3d currentVelocity = client.player.getVelocity();
-                if (currentVelocity.y < 0) {
-                    client.player.setVelocity(currentVelocity.add(0, 0.25, 0));
-                } else if (currentVelocity.y < 0.3) {
-                    client.player.setVelocity(currentVelocity.add(0, 0.1, 0));
+                if (!client.player.input.playerInput.jump()) {
+                    canFly = true;
                 }
 
-                var vec = client.player.getRotationVector();
-                var x = client.player.getX() - vec.getX();
-                var y = client.player.getY() + 0.8;
-                var z = client.player.getZ() - vec.getZ();
+                if (client.player.input.playerInput.jump() && jetpack.isOf(ModItems.JETPACK) && !jetpack.isEmpty() && fuel > 0 && canFly) {
 
-                double offset = 0.1;
+                    Vec3d currentVelocity = client.player.getVelocity();
+                    if (currentVelocity.y < 0) {
+                        client.player.setVelocity(currentVelocity.add(0, 0.25, 0));
+                    } else if (currentVelocity.y < 0.3) {
+                        client.player.setVelocity(currentVelocity.add(0, 0.1, 0));
+                    }
 
-                if (client.player.isInFluid()){
-                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z, 0, -0.08, 0);
-                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x, y, z+ offset, 0, -0.08, 0);
-                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset + offset, 0, -0.08, 0);
-                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset, 0, -0.08, 0);
-                    client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset + offset, y, z, 0, -0.08, 0);
-                    client.world.playSound(client.player, x, y, z, SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, SoundCategory.PLAYERS);
+                    var vec = client.player.getRotationVector();
+                    var x = client.player.getX() - vec.getX();
+                    var y = client.player.getY() + 0.8;
+                    var z = client.player.getZ() - vec.getZ();
 
-                } else if (client.player.isInvisible()) {
-                    client.world.addParticle(ParticleTypes.END_ROD, x, y, z, 0, -0.02, 0);
+                    double offset = 0.1;
 
-                } else {
-                    client.world.addParticle(ParticleTypes.CLOUD, x, y, z, 0, -0.1, 0);
-                    client.world.addParticle(ParticleTypes.SMOKE, x, y, z, 0, -0.06, 0);
-                    client.world.playSound(client.player, x, y, z, ModSounds.JETPACK_SOUND, SoundCategory.PLAYERS);
+                    if (client.player.isInFluid()) {
+                        client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z, 0, -0.08, 0);
+                        client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x, y, z + offset, 0, -0.08, 0);
+                        client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset + offset, 0, -0.08, 0);
+                        client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset, y, z + offset, 0, -0.08, 0);
+                        client.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, x + offset + offset, y, z, 0, -0.08, 0);
+                        client.world.playSound(client.player, x, y, z, SoundEvents.BLOCK_BUBBLE_COLUMN_BUBBLE_POP, SoundCategory.PLAYERS);
+
+                    } else if (client.player.isInvisible()) {
+                        client.world.addParticle(ParticleTypes.END_ROD, x, y, z, 0, -0.02, 0);
+
+                    } else {
+                        client.world.addParticle(ParticleTypes.CLOUD, x, y, z, 0, -0.1, 0);
+                        client.world.addParticle(ParticleTypes.SMOKE, x, y, z, 0, -0.06, 0);
+                        client.world.playSound(client.player, x, y, z, ModSounds.JETPACK_SOUND, SoundCategory.PLAYERS);
+                    }
+
+                    fuel -= 1;
+                    jetpack.set(ModComponents.JETPACK_FUEL_COMPONENT, fuel);
+                    ClientPlayNetworking.send(new SetFuelPayload(fuel));
+
+
                 }
 
-                fuel -= 1;
-                jetpack.set(ModComponents.JETPACK_FUEL_COMPONENT, fuel);
-                ClientPlayNetworking.send(new SetFuelPayload(fuel));
-
-
-
-
-
-
-
-
-
+                //if ()
+            } else if (client.player.isOnGround() || client.player.isClimbing()){
+                canFly = false;
             }
 
 
-
         });
+
+
 
         HudRenderCallback.EVENT.register((context, renderTickCounter) -> {
 
