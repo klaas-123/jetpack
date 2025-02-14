@@ -1,40 +1,21 @@
 package org.snekker.jetpack.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import org.lwjgl.glfw.GLFW;
+import net.minecraft.util.math.*;
 import org.snekker.jetpack.ModItems;
 import org.snekker.jetpack.component.ModComponents;
 import org.snekker.jetpack.network.SetFuelPayload;
 import org.snekker.jetpack.sound.ModSounds;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-
 
 
 public class JetpackClient implements ClientModInitializer {
@@ -42,7 +23,7 @@ public class JetpackClient implements ClientModInitializer {
    // private static ClientPlayerEntity player;
     //private static KeyBinding keyBinding;
     //private static PlayerEntity player1;
-
+    private boolean canDash = true;
     private boolean canFly = false;
 
     @Override
@@ -75,18 +56,32 @@ public class JetpackClient implements ClientModInitializer {
                     canFly = true;
                 }
 
+                if (client.player.input.playerInput.sprint() && canDash && fuel >= 100) {
+                    Vec3d forward = client.player.getRotationVector().multiply(1.0, 0, 1.0).normalize().multiply(2.0); // Change 1.0 to your desired speed
+                    client.player.setVelocity(forward);
+                    canDash = false;
+                    client.player.sendMessage(Text.literal("Dash!"), false);
+                    fuel -= 100;
+
+                }
+
                 if (client.player.input.playerInput.jump() && jetpack.isOf(ModItems.JETPACK) && !jetpack.isEmpty() && fuel > 0 && canFly) {
 
                     Vec3d currentVelocity = client.player.getVelocity();
-                    if (currentVelocity.y < 0) {
-                        client.player.setVelocity(currentVelocity.add(0, 0.25, 0));
-                    } else if (currentVelocity.y < 0.3) {
-                        client.player.setVelocity(currentVelocity.add(0, 0.1, 0));
-                    }
+                    Vec3d currentDirection = client.player.getRotationVecClient();
 
+                    if (client.player.input.playerInput.sneak()){
+                        client.player.setVelocity(currentVelocity.add(0, 0 - currentVelocity.getY(), 0));
+                    } else {
+                        if (currentVelocity.y < 0) {
+                            client.player.setVelocity(currentVelocity.add(0, 0.25, 0));
+                        } else if (currentVelocity.y < 0.3) {
+                            client.player.setVelocity(currentVelocity.add(0, 0.1, 0));
+                        }
+                    }
                     var vec = client.player.getRotationVector();
                     var x = client.player.getX() - vec.getX();
-                    var y = client.player.getY() + 0.8;
+                    var y = client.player.getY() + 0.6;
                     var z = client.player.getZ() - vec.getZ();
 
                     double offset = 0.1;
@@ -103,11 +98,11 @@ public class JetpackClient implements ClientModInitializer {
                         client.world.addParticle(ParticleTypes.END_ROD, x, y, z, 0, -0.02, 0);
 
                     } else {
+
                         client.world.addParticle(ParticleTypes.CLOUD, x, y, z, 0, -0.1, 0);
                         client.world.addParticle(ParticleTypes.SMOKE, x, y, z, 0, -0.06, 0);
                         client.world.playSound(client.player, x, y, z, ModSounds.JETPACK_SOUND, SoundCategory.PLAYERS);
                     }
-
                     fuel -= 1;
                     jetpack.set(ModComponents.JETPACK_FUEL_COMPONENT, fuel);
                     ClientPlayNetworking.send(new SetFuelPayload(fuel));
@@ -115,9 +110,10 @@ public class JetpackClient implements ClientModInitializer {
 
                 }
 
-                //if ()
+
             } else if (client.player.isOnGround() || client.player.isClimbing()){
                 canFly = false;
+                canDash = true;
             }
 
 
@@ -151,7 +147,13 @@ public class JetpackClient implements ClientModInitializer {
                 int rectangleX = 10;
                 int rectangleY = 10;
                 int rectangleWidth = 10;
-                int rectangleHeight = (fuel / 40);
+                int rectangleHeight;
+
+                if (fuel == 0) {
+                    rectangleHeight = 0;
+                } else {
+                    rectangleHeight = Math.min(Math.max(Math.ceilDiv(fuel, 40), 1), 50);
+                }
 
                 context.fill(8, 8, 22, 62, 0xFF373a3e);
                 context.fill(rectangleX, rectangleY + 50 - rectangleHeight, rectangleX + rectangleWidth, rectangleY + 50, 0xFF3cb0da);
