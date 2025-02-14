@@ -24,15 +24,16 @@ public class LivingEntityMixin {
 
                 var abilities = playerEntity.getAbilities();
                 if (oldStack.getItem() instanceof JetpackItem) {
-                    abilities.allowFlying = false;
-                    abilities.flying = false;
+
                 }
                 if (newStack.getItem() instanceof JetpackItem) {
-                    abilities.allowFlying = newStack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0) > 0;
+                     
                 }
             }
 
         }
     }
 }
+
+
 
