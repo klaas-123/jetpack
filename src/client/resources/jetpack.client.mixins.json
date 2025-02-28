@@ -7,7 +7,8 @@
     "EntityModelsMixin",
     "ILivingEntityRendererInvoker",
     "LivingEntityMixin",
-    "PlayerEntityRendererMixin"
+    "PlayerEntityRendererMixin",
+    "KeyBindingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

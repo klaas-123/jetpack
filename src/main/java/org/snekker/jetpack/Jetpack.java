@@ -26,6 +26,8 @@ public class Jetpack implements ModInitializer {
     @Override
     public void onInitialize() {
         ModItems.initialize();
+        ModSounds.registerSounds();
+        ModEnchantmentEffects.registerModEnchantmentEffects();
 
         // Register the group.
         Registry.register(Registries.ITEM_GROUP, CUSTOM_ITEM_GROUP_KEY, CUSTOM_ITEM_GROUP);
@@ -45,7 +47,6 @@ public class Jetpack implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(SetFuelPayload.ID, SetFuelPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(SetFuelPayload.ID, Jetpack::handleSetFuelPayload);
 
-        ModSounds.registerSounds();
     }
 
     private static void handleSetFuelPayload(SetFuelPayload setFuelPayload, ServerPlayNetworking.Context context) {

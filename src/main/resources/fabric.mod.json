@@ -13,6 +13,9 @@
     "client": [
       "org.snekker.jetpack.client.JetpackClient"
     ],
+    "fabric-datagen": [
+      "org.snekker.jetpack.client.util.JetpackDataGenerator"
+    ],
     "main": [
       "org.snekker.jetpack.Jetpack"
     ]

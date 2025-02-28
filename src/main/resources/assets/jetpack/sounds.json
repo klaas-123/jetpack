@@ -4,5 +4,11 @@
     "sounds": [
       "jetpack:jetpack_sound"
     ]
+  },
+  "dash_reset": {
+    "subtitle": "sound.jetpack.dash_reset",
+    "sounds": [
+      "jetpack:dash_reset"
+    ]
   }
 }
