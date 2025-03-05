@@ -41,7 +41,7 @@ public class JetpackItem extends ArmorItem {
     }), 9, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, ItemTags.REPAIRS_GOLD_ARMOR, JETPACK_EQUIPMENT_ASSET_KEY);
 
     public JetpackItem(Settings settings) {
-        super(JETPACK_MAT, EquipmentType.CHESTPLATE, settings.component(ModComponents.JETPACK_FUEL_COMPONENT, FUEL));
+        super(JETPACK_MAT, EquipmentType.CHESTPLATE, settings.component(ModComponents.JETPACK_FUEL_COMPONENT, 0));
 
     }
 

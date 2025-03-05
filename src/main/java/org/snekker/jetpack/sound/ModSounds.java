@@ -12,11 +12,16 @@ public class ModSounds {
     }
 
     public static final SoundEvent JETPACK_SOUND = registerSoundEvent("jetpack_sound");
+    public static final SoundEvent DASH_RESET = registerSoundEvent("dash_reset");
 
     private static SoundEvent registerSoundEvent(String name) {
         Identifier id = Identifier.of(Jetpack.MOD_ID, name);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
+
+
+
+
 
     public static void registerSounds() {
 

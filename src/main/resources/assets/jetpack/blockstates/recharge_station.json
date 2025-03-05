@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "jetpack:block/recharge_station"
+    }
+  }
+}

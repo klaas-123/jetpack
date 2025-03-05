@@ -6,5 +6,7 @@
   "item.jetpack.thruster": "Thruster",
   "item.jetpack.jet_engine": "Jet Engine",
   "item.jetpack.propeller": "Propeller",
+  "item.jetpack.recharge_station": "Recharge Station",
   "enchantment.jetpack.leaping": "Leaping",
+  "block.jetpack.recharge_station": "Recharge Station"
 }

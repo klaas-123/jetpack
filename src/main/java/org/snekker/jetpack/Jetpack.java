@@ -9,7 +9,11 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.snekker.jetpack.block.ModBlocks;
 import org.snekker.jetpack.component.ModComponents;
+import org.snekker.jetpack.enchantments.ModEnchantmentEffects;
 import org.snekker.jetpack.network.SetFuelPayload;
 import org.snekker.jetpack.sound.ModSounds;
 
@@ -18,6 +22,7 @@ import static org.snekker.jetpack.ModItems.CUSTOM_ITEM_GROUP_KEY;
 
 public class Jetpack implements ModInitializer {
     public static final String MOD_ID = "jetpack";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static Identifier id(String id) {
         return Identifier.of(MOD_ID, id);
@@ -26,13 +31,13 @@ public class Jetpack implements ModInitializer {
     @Override
     public void onInitialize() {
         ModItems.initialize();
+        ModBlocks.initialize();
         ModSounds.registerSounds();
         ModEnchantmentEffects.registerModEnchantmentEffects();
 
-        // Register the group.
         Registry.register(Registries.ITEM_GROUP, CUSTOM_ITEM_GROUP_KEY, CUSTOM_ITEM_GROUP);
 
-// Register items to the custom item group.
+
         ItemGroupEvents.modifyEntriesEvent(CUSTOM_ITEM_GROUP_KEY).register(itemGroup -> {
             itemGroup.add(ModItems.JETPACK);
             itemGroup.add(ModItems.JET_ENGINE);
@@ -40,12 +45,12 @@ public class Jetpack implements ModInitializer {
             itemGroup.add(ModItems.PROPELLER);
             itemGroup.add(ModItems.FUEL_CELL);
             itemGroup.add(ModItems.EMPTY_FUEL_CELL);
-           // itemGroup.add(ModItems.JETPACK_CHESTPLATE);
-            // ...
+            itemGroup.add(ModBlocks.RECHARGE_STATION);
         });
 
         PayloadTypeRegistry.playC2S().register(SetFuelPayload.ID, SetFuelPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(SetFuelPayload.ID, Jetpack::handleSetFuelPayload);
+
 
     }
 
