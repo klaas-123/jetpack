@@ -9,6 +9,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -34,16 +36,16 @@ import static org.snekker.jetpack.item.JetpackItem.FUEL;
 
 public class JetpackClient implements ClientModInitializer {
 
+    static int fuelPercentage;
     private boolean cannotChainDash = true;
     private boolean canDash = false;
     private boolean canFly = false;
     private boolean onCooldown = false;
-    private int soundcount = 20;
-    private int count = 0;
+    private int soundcount = 64;
 
     @Override
     public void onInitializeClient() {
-
+        JetpackKeys.registerKeybinds();
         HandledScreens.register(ModScreens.RECHARGE_STATION, RechargeScreen::new);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -55,6 +57,7 @@ public class JetpackClient implements ClientModInitializer {
 
             var jetpack = client.player.getEquippedStack(EquipmentSlot.CHEST);
             var fuel = jetpack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
+
             if (!client.player.isOnGround()) {
 
                 var vec = client.player.getRotationVector();
@@ -66,7 +69,12 @@ public class JetpackClient implements ClientModInitializer {
 
                 if (!client.player.input.playerInput.jump()) {
                     canFly = true;
-                    soundcount = 20;
+                    soundcount = 64;
+                    client.getSoundManager().stopSounds(ModSounds.JETPACK_SOUND.id(), SoundCategory.PLAYERS);
+                    client.player.fallDistance = 0;
+                }
+
+                if (fuel == 0) {
                     client.getSoundManager().stopSounds(ModSounds.JETPACK_SOUND.id(), SoundCategory.PLAYERS);
                 }
 
@@ -77,10 +85,11 @@ public class JetpackClient implements ClientModInitializer {
                 if (client.player.input.playerInput.sprint() && canDash && cannotChainDash && !onCooldown && fuel >= 100) {
                     Vec3d forward = client.player.getRotationVector().multiply(1.0, 0, 1.0).normalize().multiply(2.0); // Change 1.0 to your desired speed
                     client.player.setVelocity(forward);
+                    fuel -= 100;
                     onCooldown = true;
                     canDash = false;
                     cannotChainDash = false;
-                    fuel -= 100;
+
                     Timer timer = new Timer();
 
                     timer.schedule(new TimerTask() {
@@ -93,6 +102,7 @@ public class JetpackClient implements ClientModInitializer {
 
 
                 }
+                //client.player.setVelocity(client.player.getVelocity().getX(), client.player.input.playerInput.jump() ? 0.2D : client.player.getVelocity().getY(), client.player.getVelocity().getZ());
 
                 if (client.player.input.playerInput.jump() && jetpack.isOf(ModItems.JETPACK) && !jetpack.isEmpty() && fuel > 0 && canFly) {
 
@@ -100,12 +110,15 @@ public class JetpackClient implements ClientModInitializer {
                     Vec3d currentDirection = client.player.getRotationVecClient();
 
                     if (client.player.input.playerInput.sneak()){
-                        client.player.setVelocity(currentVelocity.add(0, 0 - currentVelocity.getY(), 0));
+                        client.player.setVelocity(currentVelocity.getX(), 0, currentVelocity.getZ());
+
                     } else {
                         if (currentVelocity.y < 0) {
                             client.player.setVelocity(currentVelocity.add(0, 0.25, 0));
+                            client.player.fallDistance = 0;
                         } else if (currentVelocity.y < 0.3) {
                             client.player.setVelocity(currentVelocity.add(0, 0.1, 0));
+                            client.player.fallDistance = 0;
                         }
                     }
 
@@ -125,7 +138,7 @@ public class JetpackClient implements ClientModInitializer {
                         client.world.addParticle(ParticleTypes.CLOUD, x, y, z, 0, -0.1, 0);
                         client.world.addParticle(ParticleTypes.SMOKE, x, y, z, 0, -0.06, 0);
 
-                        if (soundcount == 20) {
+                        if (soundcount == 64) {
                             soundcount = 0;
                             client.world.playSound(client.player, x, y, z, ModSounds.JETPACK_SOUND, SoundCategory.PLAYERS);
 
@@ -151,7 +164,6 @@ public class JetpackClient implements ClientModInitializer {
         });
 
 
-
         HudRenderCallback.EVENT.register((context, renderTickCounter) -> {
 
             var client = MinecraftClient.getInstance();
@@ -159,40 +171,23 @@ public class JetpackClient implements ClientModInitializer {
             var fuel = jetpack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
 
 
-                    /*Matrix4f transformationMatrix = context.getMatrices().peek().getPositionMatrix();
-                    Tessellator tessellator = Tessellator.getInstance();
-
-                    BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-
-                    buffer.vertex(transformationMatrix, 20, 20, 5).color(0xFF414141);
-                    buffer.vertex(transformationMatrix, 5, 40, 5).color(0xFF000000);
-                    buffer.vertex(transformationMatrix, 35, 40, 5).color(0xFF000000);
-                    buffer.vertex(transformationMatrix, 20, 60, 5).color(0xFF414141);
-
-                    RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-                    BufferRenderer.drawWithGlobalProgram(buffer.end());*/
-
             if (jetpack.isOf(ModItems.JETPACK)) {
 
                 int textureFuelHeight = (int) Math.ceil(fuel/31.25);
                 int fuelStartHeight = 68 - textureFuelHeight ;
 
-                //count += 1;
+               if (fuel/20.00 == 0) {
+                    fuelPercentage = 0;
+                } else {
+                    fuelPercentage = (int) Math.max(fuel/20.00, 1);
+                }
 
-                //if (count == 100) {
-                    //count = 0;
 
-                    //client.player.sendMessage(Text.literal(String.valueOf(textureFuelHeight)), false);
-                    //client.player.sendMessage(Text.literal(String.valueOf(fuelStartHeight)), false);
-                //}
                 context.enableScissor(-8, fuelStartHeight, 56, 68);
                 context.drawGuiTexture(RenderLayer::getGuiTextured, Identifier.of(Jetpack.MOD_ID, "renderer_fuel"), 64, 64, 0, 0, -8, 4, 64, 64);
                 context.disableScissor();
                 context.drawGuiTexture(RenderLayer::getGuiTextured, Identifier.of(Jetpack.MOD_ID, "renderer_fuel_cell"), 64, 64, 0, 0, -8, 4, 64, 64);
-                //context.fill(8, 8, 22, 62, 0xFF373a3e);
-                //context.fill(rectangleX, rectangleY + 50 - rectangleHeight, rectangleX + rectangleWidth, rectangleY + 50, 0xFF3cb0da);
+                context.drawText(client.textRenderer, String.valueOf(fuelPercentage) + "%", 16, 72, 0xFFFFFFFF, true);
             }
         });
 
