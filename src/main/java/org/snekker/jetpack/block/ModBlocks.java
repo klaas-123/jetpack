@@ -44,7 +44,7 @@ public class ModBlocks {
     public static final Block RECHARGE_STATION = register(
             "recharge_station",
             RechargeStation::new,
-            AbstractBlock.Settings.copy(Blocks.BAMBOO),
+            AbstractBlock.Settings.copy(Blocks.BREWING_STAND),
             true
     );
 

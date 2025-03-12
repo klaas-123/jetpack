@@ -1,6 +1,6 @@
 {
-  "model": {
-    "type": "minecraft:model",
-    "model": "fabric-docs-reference:block/recharge_station"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "jetpack:item/recharge_station"
   }
 }

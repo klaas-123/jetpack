@@ -11,6 +11,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.snekker.jetpack.block.JetpackBlockEntityTypes;
 import org.snekker.jetpack.block.ModBlocks;
 import org.snekker.jetpack.component.ModComponents;
 import org.snekker.jetpack.enchantments.ModEnchantmentEffects;
@@ -32,8 +33,10 @@ public class Jetpack implements ModInitializer {
     public void onInitialize() {
         ModItems.initialize();
         ModBlocks.initialize();
+        JetpackBlockEntityTypes.registerBlockEntityTypes();
         ModSounds.registerSounds();
         ModEnchantmentEffects.registerModEnchantmentEffects();
+
 
         Registry.register(Registries.ITEM_GROUP, CUSTOM_ITEM_GROUP_KEY, CUSTOM_ITEM_GROUP);
 

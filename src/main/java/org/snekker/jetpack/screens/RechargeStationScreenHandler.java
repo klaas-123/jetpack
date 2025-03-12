@@ -25,7 +25,8 @@ public class RechargeStationScreenHandler extends ScreenHandler {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return false;
+        return true;
     }
 
 }
+ 
