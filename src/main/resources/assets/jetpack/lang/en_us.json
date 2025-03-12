@@ -8,5 +8,6 @@
   "item.jetpack.propeller": "Propeller",
   "item.jetpack.recharge_station": "Recharge Station",
   "enchantment.jetpack.leaping": "Leaping",
-  "block.jetpack.recharge_station": "Recharge Station"
+  "block.jetpack.recharge_station": "Recharge Station",
+  "screen.jetpack.recharge_station.title": " "
 }

@@ -4,48 +4,51 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import org.snekker.jetpack.Jetpack;
 import org.snekker.jetpack.block.RechargeStation;
 import org.snekker.jetpack.screens.RechargeStationScreenHandler;
 
 public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> {
+
+    public static final Identifier BACKGROUND_TEXTURE = Jetpack.id("textures/gui/container/recharge_station.png");
+
     public RechargeScreen(RechargeStationScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
 
+    private int originX;
+    private int originY;
+
     @Override
     protected void init() {
-        ButtonWidget buttonWidget = ButtonWidget.builder(Text.of("Hello World"), (btn) -> {
-            // When the button is clicked, we can display a toast to the screen.
-            this.client.getToastManager().add(
-                    SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Hello World!"), Text.of("This is a toast."))
-            );
-        }).dimensions(40, 40, 120, 20).build();
-        // x, y, width, height
-        // It's recommended to use the fixed height of 20 to prevent rendering issues with the button
-        // textures.
+        super.init();
 
-        // Register the button widget.
-        this.addDrawableChild(buttonWidget);
-
+        originX = (width - backgroundWidth) / 2;
+        originY = (height - backgroundHeight) / 2;
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-
-        // Minecraft doesn't have a "label" widget, so we'll have to draw our own text.
-        // We'll subtract the font height from the Y position to make the text appear above the button.
-        // Subtracting an extra 10 pixels will give the text some padding.
-        // textRenderer, text, x, y, color, hasShadow
-        context.drawText(this.textRenderer, "Special Button", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
     }
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-
+        context.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, originX, originY, 0, 0, backgroundWidth, backgroundHeight, 176, 166);
+        /*if (handler.isCharging()) {
+            int progress = MathHelper.ceil(this.handler.getChargeProgress() * 13.0F) + 1;
+            context.drawGuiTexture(RenderLayer::getGuiTextured, CHARGE_PROGRESS_TEXTURE, 14, 14, 0, 14 - progress, originX + 82, originY + 56 + 14 - progress, 14, progress);
+            sparkles = sparkles + 1;
+            if (sparkles > 199) {
+                sparkles = 0;
+            }
+            context.drawGuiTexture(RenderLayer::getGuiTextured, SPARKLES_TEXTURE, 24, 120, 0, (int)Math.floor(sparkles / 40.0) * 24, originX + 80, originY + 21, 24, 24);
+        }*/
     }
 
 
