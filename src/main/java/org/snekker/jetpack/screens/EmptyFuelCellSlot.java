@@ -13,7 +13,7 @@ public class EmptyFuelCellSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return false;
+        return stack.isOf(ModItems.EMPTY_FUEL_CELL);
     }
 
 }

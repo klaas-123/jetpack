@@ -7,6 +7,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -24,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RechargeStation extends BlockWithEntity {
+public class RechargeStation extends BlockWithEntity implements BlockEntityTicker<RechargeStationEntity> {
     public RechargeStation(Settings settings) {
         super(settings);
     }
@@ -40,6 +42,15 @@ public class RechargeStation extends BlockWithEntity {
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new RechargeStationEntity(pos, state);
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (type == JetpackBlockEntityTypes.RECHARGE_STATION_ENTITY) {
+            return (BlockEntityTicker<T>) this;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -64,4 +75,13 @@ public class RechargeStation extends BlockWithEntity {
     protected List<ItemStack> getDroppedStacks(BlockState state, LootWorldContext.Builder builder) {
         return super.getDroppedStacks(state, builder);
     }
+
+
+    @Override
+    public void tick(World world, BlockPos pos, BlockState state, RechargeStationEntity blockEntity) {
+        blockEntity.tick(world, pos, state);
+
+    }
+
+
 }
