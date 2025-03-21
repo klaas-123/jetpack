@@ -1,10 +1,8 @@
-package org.snekker.jetpack.screens;
+package org.snekker.jetpack.screens.slots;
 
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.MinecartItem;
 import net.minecraft.screen.slot.Slot;
 
 public class IngredientSlot extends Slot {

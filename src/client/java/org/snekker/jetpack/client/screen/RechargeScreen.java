@@ -1,21 +1,20 @@
 package org.snekker.jetpack.client.screen;
 
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.toast.SystemToast;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import org.snekker.jetpack.Jetpack;
-import org.snekker.jetpack.block.RechargeStation;
 import org.snekker.jetpack.screens.RechargeStationScreenHandler;
 
 public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> {
 
     public static final Identifier BACKGROUND_TEXTURE = Jetpack.id("textures/gui/container/recharge_station.png");
+    public static final Identifier SMELT_PROGRESS_TEXTURE = Jetpack.id("container/recharge_station/smelt_progress");
+    public static final Identifier MELT_PROGRESS_TEXTURE = Jetpack.id("container/recharge_station/melt_progress");
 
     public RechargeScreen(RechargeStationScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -35,12 +34,18 @@ public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+
     }
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        context.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, originX, originY, 0, 0, backgroundWidth, backgroundHeight, 176, 166);
+        context.drawTexture(RenderLayer::getGuiTextured, BACKGROUND_TEXTURE, originX, originY, 0, 0, backgroundWidth = 215, backgroundHeight, 215, 166);
         drawMouseoverTooltip(context, mouseX, mouseY);
+        if (handler.isCharging()) {
+            int progress = MathHelper.ceil(this.handler.getChargeProgress() * 13.0F);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, SMELT_PROGRESS_TEXTURE, 13, 13, 0, 13 - progress, originX + 66, (originY + 36 + 14) - progress, 13, progress);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, MELT_PROGRESS_TEXTURE, 7, 11, 0, 11 - progress, originX + 97, (originY + 31 + 14) - progress, 7, progress);
+        }
     }
 
 

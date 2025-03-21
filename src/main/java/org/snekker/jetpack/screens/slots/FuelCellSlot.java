@@ -1,16 +1,15 @@
-package org.snekker.jetpack.screens;
+package org.snekker.jetpack.screens.slots;
 
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import org.snekker.jetpack.ModItems;
+import org.snekker.jetpack.screens.RechargeStationScreenHandler;
 
 
 public class FuelCellSlot extends Slot {
-    private final RechargeStationScreenHandler handler;
     public FuelCellSlot(RechargeStationScreenHandler handler, Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
-        this.handler = handler;
     }
 
     @Override

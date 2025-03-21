@@ -1,9 +1,10 @@
-package org.snekker.jetpack.screens;
+package org.snekker.jetpack.screens.slots;
 
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
+import org.snekker.jetpack.screens.RechargeStationScreenHandler;
 
 
 public class FuelSlot extends Slot {
