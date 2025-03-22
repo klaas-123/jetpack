@@ -8,6 +8,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.snekker.jetpack.Jetpack;
+import org.snekker.jetpack.component.ModComponents;
 import org.snekker.jetpack.screens.RechargeStationScreenHandler;
 
 public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> {
@@ -18,8 +19,9 @@ public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> 
 
     public RechargeScreen(RechargeStationScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+        playerInventory = inventory;
     }
-
+    private final PlayerInventory playerInventory;
     private int originX;
     private int originY;
 
@@ -35,6 +37,9 @@ public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
+        var text = handler.getJetpackFuelStat();
+        var width = getTextRenderer().getWidth(text);
+        context.drawText(getTextRenderer(), text, originX + 230 - width, originY + 65, 1, true);
     }
 
     @Override

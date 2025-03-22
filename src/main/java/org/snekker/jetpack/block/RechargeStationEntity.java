@@ -19,7 +19,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.snekker.jetpack.Jetpack;
 import org.snekker.jetpack.ModItems;
 import org.snekker.jetpack.component.ModComponents;
 import org.snekker.jetpack.item.JetpackItem;
@@ -30,6 +29,7 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
     public final PropertyDelegate propertyDelegate;
     private int fuelLeft = 0;
     private int fuelMax = 0;
+
 
 
     public RechargeStationEntity(BlockPos pos, BlockState state) {
@@ -44,6 +44,11 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
                 return switch (index) {
                     case 0 -> RechargeStationEntity.this.fuelLeft;
                     case 1 -> RechargeStationEntity.this.fuelMax;
+                    case 2 -> {
+                        var jetpackStack = getJetpackSlotStack();
+                        yield jetpackStack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
+                    }
+                    case 3 -> JetpackItem.FUEL;
                     default -> 0;
                 };
             }
@@ -58,7 +63,7 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
 
             @Override
             public int size() {
-                return 2;
+                return 4;
             }
         };
 
@@ -180,7 +185,7 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
         fuelMax = nbt.getInt("fuel_max");
     }
 
-    public void tick(World world, BlockPos ignoredPos, BlockState ignoredState) {
+    public void tick(World world, BlockPos pos, BlockState state) {
         var fuelStack = getFuelSlotStack();
         var ingredientStack = getIngredientSlotStack();
         var cellStack = getCellSlotStack();
@@ -191,7 +196,7 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
         var hasEmptyCell = !emptyCellStack.isEmpty();
         var jetpackStack = getJetpackSlotStack();
         var hasJetpack = !jetpackStack.isEmpty();
-        var fuelCellStack = getCellSlotStack();
+        var fuelCellStack = getFuelCellSlotStack();
         var hasFuelCell = !fuelCellStack.isEmpty();
         var fuel = jetpackStack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
 
@@ -230,22 +235,19 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
                 }
             }
 
-
-            /*
-
-            emptyCellStack.decrement(1);
-            ingredientStack.decrement(1);
-            fuelStack.decrement(1);
-            if (!hasCell) {
-                setCellSlotStack(new ItemStack(ModItems.FUEL_CELL));
-            } else if (hasCell) {
-                cellStack.increment(1);
-            }
-
-             */
-
         }
 
+        if (hasJetpack && hasFuelCell) {
+                for (int i = 0; i < 200; i++) {
+                    if (fuel < JetpackItem.FUEL) {
+                        fuel++;
+                        jetpackStack.set(ModComponents.JETPACK_FUEL_COMPONENT, fuel);
+                    }
+                }
+                if (fuel < JetpackItem.FUEL) {
+                    fuelCellStack.decrement(1);
+                }
+        }
     }
 
     @Override

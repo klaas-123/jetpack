@@ -8,18 +8,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.snekker.jetpack.ModItems;
 import org.snekker.jetpack.screens.slots.*;
 
 public class RechargeStationScreenHandler extends ScreenHandler {
-
+    private final Inventory inventory;
     private final World world;
     private final PropertyDelegate propertyDelegate;
 
     public RechargeStationScreenHandler (int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(ModScreens.RECHARGE_STATION, syncId);
-
+        this.inventory = inventory;
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.getWorld();
 
@@ -47,48 +49,39 @@ public class RechargeStationScreenHandler extends ScreenHandler {
         return ((float)propertyDelegate.get(1) - propertyDelegate.get(0)) / propertyDelegate.get(1);
     }
 
+    public Text getJetpackFuelStat() {
+        return Text.literal("" + propertyDelegate.get(2)).withColor(0xFFFFFFFF)
+                .append(Text.literal("/").withColor(0xFFFFFFFF))
+                .append(Text.literal("" + propertyDelegate.get(3)));
+    }
+
     public RechargeStationScreenHandler (int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new SimpleInventory(6), new ArrayPropertyDelegate(4));
     }
 
     @Override
     public ItemStack quickMove(PlayerEntity playerEntity, int slotIndex) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        var slot = this.slots.get(slotIndex);
-        var ingredientSlot = (IngredientSlot) slots.get(0);
-        var fuelSlot = (FuelSlot) slots.get(3);
-        var emptyCellSlot = (EmptyFuelCellSlot) slots.get(1);
-
-        if (slot.hasStack()) {
-            var slotStack = slot.getStack();
-            if (slot.getStack().isOf(ModItems.FUEL_CELL)) {
-                if (slotIndex == 0) {
-                    // going from jetpack slot to inventory
-                    if (!insertItem(slotStack, 2, 38, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                    slot.markDirty();
-                } else if (!ingredientSlot.hasStack()) {
-                    // going from inventory to jetpack slot
-                    if (!insertItem(slotStack, 0, 1, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                }
-            } else if (slotIndex == 1) {
-                // going from fuel slot to inventory
-                if (!insertItem(slotStack, 2, 38, false)) {
+        ItemStack newStack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(slotIndex);
+        if (slot != null && slot.hasStack()) {
+            ItemStack originalStack = slot.getStack();
+            newStack = originalStack.copy();
+            if (slotIndex < this.inventory.size()) {
+                if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.markDirty();
-            } else if (isFuel(slot.getStack()) && !fuelSlot.hasStack()) {
-                // going from inventory to fuel slot
-                if (!insertItem(slotStack, 1, 2, false)) {
-                    return ItemStack.EMPTY;
-                }
+            } else if (!this.insertItem(originalStack, 0, this.inventory.size(), false)) {
+                return ItemStack.EMPTY;
             }
 
+            if (originalStack.isEmpty()) {
+                slot.setStack(ItemStack.EMPTY);
+            } else {
+                slot.markDirty();
+            }
         }
-        return itemStack;
+
+        return newStack;
     }
 
     @Override
