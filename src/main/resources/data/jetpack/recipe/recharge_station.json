@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iri",
+    "qeq",
+    "ddd"
+  ],
+  "key": {
+    "r" : "minecraft:redstone"
+  ,
+    "i" : "minecraft:iron_ingot"
+  ,
+    "q": "minecraft:quartz"
+  ,
+    "d": "minecraft:deepslate_tiles"
+  ,
+    "e": "minecraft:emerald"
+  },
+  "result":{
+    "id": "jetpack:recharge_station"
+  }
+}

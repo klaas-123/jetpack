@@ -3,16 +3,16 @@
   "pattern": [
     "g g",
     "jNj",
-    "   "
+    "b b"
   ],
   "key": {
     "j" : "jetpack:jet_engine"
     ,
-    "N" : "minecraft:nether_star"
+    "N" : "minecraft:quartz"
     ,
     "g" : "minecraft:gold_ingot"
-
-
+    ,
+    "b" : "minecraft:blaze_powder"
   },
   "result":{
     "id": "jetpack:jetpack"

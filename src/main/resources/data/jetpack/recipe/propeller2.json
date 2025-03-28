@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "G G",
-    "G G",
-    "iii"
+    " i ",
+    "iFi",
+    " i "
   ],
   "key": {
-    "G" : "minecraft:glass"
+    "F" : "minecraft:feather"
   ,
     "i" : "minecraft:iron_ingot"
 
   },
   "result":{
-    "id": "jetpack:empty_fuel_cell"
+    "id": "jetpack:propeller"
   }
 }

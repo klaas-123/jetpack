@@ -39,7 +39,7 @@ public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> 
 
         var text = handler.getJetpackFuelStat();
         var width = getTextRenderer().getWidth(text);
-        context.drawText(getTextRenderer(), text, originX + 230 - width, originY + 65, 1, true);
+        context.drawText(getTextRenderer(), text, originX + 230 - width, originY + 4, 1, true);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> 
         if (handler.isCharging()) {
             int progress = MathHelper.ceil(this.handler.getChargeProgress() * 13.0F);
             context.drawGuiTexture(RenderLayer::getGuiTextured, SMELT_PROGRESS_TEXTURE, 13, 13, 0, 13 - progress, originX + 66, (originY + 36 + 14) - progress, 13, progress);
-            context.drawGuiTexture(RenderLayer::getGuiTextured, MELT_PROGRESS_TEXTURE, 7, 11, 0, 11 - progress, originX + 97, (originY + 31 + 14) - progress, 7, progress);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, MELT_PROGRESS_TEXTURE, 7, 11, 0,  -2, originX + 97, originY + 31, 7, progress);
         }
     }
 

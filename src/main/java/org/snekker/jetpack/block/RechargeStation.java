@@ -1,6 +1,5 @@
 package org.snekker.jetpack.block;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -10,13 +9,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
@@ -88,15 +82,6 @@ public class RechargeStation extends BlockWithEntity implements BlockEntityTicke
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) instanceof RechargeStationEntity rechargeStationEntity) {
-            /*
-            var stack = rechargeStationEntity.getJetpackSlotStack();
-            if (!stack.isEmpty()) {
-                var inventory = new SimpleInventory(stack);
-                ItemScatterer.spawn(world, pos, inventory);
-            }
-
-             */
-
             ItemScatterer.spawn(world, pos, rechargeStationEntity.inventory);
         }
         return super.onBreak(world, pos, state, player);
