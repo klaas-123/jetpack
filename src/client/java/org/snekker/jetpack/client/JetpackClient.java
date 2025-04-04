@@ -9,29 +9,23 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import org.snekker.jetpack.Jetpack;
 import org.snekker.jetpack.ModItems;
-import org.snekker.jetpack.block.RechargeStation;
 import org.snekker.jetpack.client.screen.RechargeScreen;
 import org.snekker.jetpack.component.ModComponents;
-import org.snekker.jetpack.item.JetpackItem;
 import org.snekker.jetpack.network.SetFuelPayload;
 import org.snekker.jetpack.screens.ModScreens;
-import org.snekker.jetpack.screens.RechargeStationScreenHandler;
 import org.snekker.jetpack.sound.ModSounds;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.snekker.jetpack.item.JetpackItem.FUEL;
+
 
 
 public class JetpackClient implements ClientModInitializer {
@@ -173,18 +167,23 @@ public class JetpackClient implements ClientModInitializer {
 
             if (jetpack.isOf(ModItems.JETPACK)) {
 
-                int textureFuelHeight = (int) Math.ceil(fuel/31.25);
-                int fuelStartHeight = 68 - textureFuelHeight ;
+                int textureFuelHeight = (int) Math.ceil(fuel / ((double) 2000 / 49));
+                int fuelStartHeight = 61 - textureFuelHeight ;
+
 
                if (fuel/20.00 == 0) {
                     fuelPercentage = 0;
-                } else {
+               } else {
                     fuelPercentage = (int) Math.max(fuel/20.00, 1);
-                }
+               }
+
+               if (fuelPercentage != 0 && fuelPercentage < 2) {
+                   fuelStartHeight = 60;
+               }
 
 
-                context.enableScissor(-8, fuelStartHeight, 56, 68);
-                context.drawGuiTexture(RenderLayer::getGuiTextured, Identifier.of(Jetpack.MOD_ID, "renderer_fuel"), 64, 64, 0, 0, -8, 4, 64, 64);
+                context.enableScissor(-8, fuelStartHeight, 56, 62);
+                context.drawGuiTexture(RenderLayer::getGuiTextured, Identifier.of(Jetpack.MOD_ID, "renderer_fuel"), 18, 49, 0, 0, 15, 12, 18, 49);
                 context.disableScissor();
                 context.drawGuiTexture(RenderLayer::getGuiTextured, Identifier.of(Jetpack.MOD_ID, "renderer_fuel_cell"), 64, 64, 0, 0, -8, 4, 64, 64);
                 context.drawText(client.textRenderer, String.valueOf(fuelPercentage) + "%", 16, 72, 0xFFFFFFFF, true);
