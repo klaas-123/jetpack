@@ -12,6 +12,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.snekker.jetpack.ModItems;
+import org.snekker.jetpack.item.JetpackItem;
 import org.snekker.jetpack.screens.slots.*;
 
 public class RechargeStationScreenHandler extends ScreenHandler {
@@ -70,8 +71,24 @@ public class RechargeStationScreenHandler extends ScreenHandler {
                 if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, 0, this.inventory.size(), false)) {
-                return ItemStack.EMPTY;
+            } else {
+                // Moving from player inventory → container inventory
+                if (originalStack.getItem() == ModItems.FUEL_CELL) {
+                    // Only try to insert into slot 4
+                    Slot targetSlot = this.slots.get(4);
+                    if (!targetSlot.canInsert(originalStack)) {
+                        return ItemStack.EMPTY;
+                    }
+
+                    if (!this.insertItem(originalStack, 4, 5, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else {
+                    // Handle all other items normally (e.g., try to insert anywhere in container inventory)
+                    if (!this.insertItem(originalStack, 0, this.inventory.size(), false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
             }
 
             if (originalStack.isEmpty()) {
