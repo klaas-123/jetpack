@@ -201,6 +201,18 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
         var fuel = jetpackStack.getOrDefault(ModComponents.JETPACK_FUEL_COMPONENT, 0);
 
 
+        if (hasJetpack && hasFuelCell) {
+            for (int i = 0; i < 200; i++) {
+                if (fuel < JetpackItem.FUEL) {
+                    fuel++;
+                    jetpackStack.set(ModComponents.JETPACK_FUEL_COMPONENT, fuel);
+                }
+            }
+            if (fuel < JetpackItem.FUEL) {
+                fuelCellStack.decrement(1);
+            }
+        }
+
         if (hasEmptyCell && hasIngredient) {
             if (!hasFuel) {
                 fuelLeft = fuelMax = 0;
@@ -235,18 +247,6 @@ public class RechargeStationEntity extends BlockEntity implements NamedScreenHan
                 }
             }
 
-        }
-
-        if (hasJetpack && hasFuelCell) {
-                for (int i = 0; i < 200; i++) {
-                    if (fuel < JetpackItem.FUEL) {
-                        fuel++;
-                        jetpackStack.set(ModComponents.JETPACK_FUEL_COMPONENT, fuel);
-                    }
-                }
-                if (fuel < JetpackItem.FUEL) {
-                    fuelCellStack.decrement(1);
-                }
         }
     }
 

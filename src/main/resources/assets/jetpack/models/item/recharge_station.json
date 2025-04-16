@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "jetpack:item/recharge_station"
-  }
+  "parent": "jetpack:block/recharge_station"
 }
