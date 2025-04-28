@@ -48,8 +48,8 @@ public class RechargeScreen extends HandledScreen<RechargeStationScreenHandler> 
         drawMouseoverTooltip(context, mouseX, mouseY);
         if (handler.isCharging()) {
             int progress = MathHelper.ceil(this.handler.getChargeProgress() * 13.0F);
-            context.drawGuiTexture(RenderLayer::getGuiTextured, SMELT_PROGRESS_TEXTURE, 215, 166, 0, 13 - progress, originX , originY, 176, 166);
-            context.drawGuiTexture(RenderLayer::getGuiTextured, MELT_PROGRESS_TEXTURE, 215, 166, 0,  0, originX, originY, 176, 166);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, SMELT_PROGRESS_TEXTURE, 215, 166, 0, 50 - progress, originX, originY + 49 - progress, 176, progress);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, MELT_PROGRESS_TEXTURE, 215, 166, 0,  33, originX, originY + 32, 176, progress);
         }
     }
 
